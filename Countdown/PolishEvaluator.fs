@@ -23,6 +23,6 @@ let rec evaluateItems items =
     | Number(a) :: [] -> a
     | Number(_) :: _ -> failwith "Items cannot start with number and more items"
     | Operator(_) :: Operator(_) :: _ -> failwith "Items cannot start with two operarors"
-    | Operator(_) :: _ -> failwith "Items cannot start with just one operarors"
+    | Operator(_) :: _ -> failwith "Items cannot start with just one operator"
 
 
