@@ -4,8 +4,6 @@
 
 //type Items = Items of List<Item>
 
-let calc = [Number(1);Number(2);Operator(+)]
-
 let executeTop items  =
     match items with
     | Number(a)::Number(b)::Operator(o)::rest -> Number(o a b)::rest
@@ -20,9 +18,7 @@ let execute items =
 
     match (items |> executeRest) with
     | [Number(x)] -> x
-    | _ -> failwith "Error"
-
-calc |> executeTop
+    | x -> failwith "Error"
 
 // 1 2 + 3 + = 6
 [Number(1);Number(2);Operator(+);Number(3);Operator(+)]
@@ -40,3 +36,7 @@ calc |> executeTop
 [Number(1);Number(2);Operator(*);Number(3);Operator(*)]
 |> execute
 
+// 1 2 3 4 5
+// 1 2 + 4 + 5 +
+[Number(1);Number(2);Operator(+);Number(4);Operator(+);Number(5);Operator(+)]
+|> execute
