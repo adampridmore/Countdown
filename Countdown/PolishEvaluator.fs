@@ -15,10 +15,12 @@ let evaluate operator a b =
     | Multiply -> a * b
     | Divide -> a / b
 
+// × (− 5 6) 7
 let rec evaluateItems items = 
     match items with
     | Operator o :: Number(a) :: Number(b) :: [] -> evaluate o a b
     | Operator o :: Number(a) :: rest -> evaluate o a (evaluateItems rest)
+    // | Operator o :: rest -> evaluate o (evaluateItems rest)
     | [] -> 0
     | Number(a) :: [] -> a
     | Number(_) :: _ -> failwith "Items cannot start with number and more items"

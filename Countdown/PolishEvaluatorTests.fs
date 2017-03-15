@@ -17,6 +17,12 @@ let ``+ 1 * 2 3 = 7``() =
     |> should equal 7
 
 [<Test>]
+let ``* + 1 2 3``() =
+    [Operator(Multiply);Number(3);Operator(Plus);Number(1);Number(2)]
+    |> evaluateItems
+    |> should equal 9
+
+[<Test>]
 let ``Just 1``() = 
     [Number(1)] |> evaluateItems |> should equal 1
 
