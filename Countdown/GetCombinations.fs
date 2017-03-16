@@ -1,4 +1,6 @@
-﻿let getCombinations length max = 
+﻿module GetCombinations
+
+let getCombinations length max = 
     
     let next numbers = 
         let mapfolder (carry: int) (item:int) = 
@@ -28,3 +30,4 @@ getCombinations 2 10
 |> Seq.map (Seq.toList)
 |> Seq.map (List.rev)
 |> Seq.iter (printfn "%A")
+

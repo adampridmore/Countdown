@@ -60,13 +60,16 @@
     <Compile Include="StackCalculator2.fs" />
     <Compile Include="StackCalculator2Tests.fs" />
     <Compile Include="CountdownSolver.fs" />
+    <Compile Include="GetCombinations.fs" />
+    <Compile Include="GetCombinationsTests.fs" />
     <Compile Include="Program.fs" />
     <None Include="Script2.fsx" />
     <None Include="Script3.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">
-      <HintPath>..\packages\FSharp.Core.3.1.2.5\lib\net40\FSharp.Core.dll</HintPath>
+      <HintPath>..\packages\FSharp.Core.4.1.0.2\lib\net45\FSharp.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="FsUnit.NUnit">
       <HintPath>..\packages\FsUnit.3.0.0\lib\net45\FsUnit.NUnit.dll</HintPath>
