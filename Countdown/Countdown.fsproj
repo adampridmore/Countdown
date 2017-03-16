@@ -57,14 +57,9 @@
     <Compile Include="AssemblyInfo.fs" />
     <None Include="App.config" />
     <Content Include="packages.config" />
-    <Compile Include="PolishEvaluator.fs" />
-    <Compile Include="PolishEvaluatorTests.fs" />
-    <Compile Include="StackCalculator.fs" />
-    <Compile Include="StackCalculatorTests.fs" />
     <Compile Include="StackCalculator2.fs" />
     <Compile Include="StackCalculator2Tests.fs" />
     <Compile Include="Program.fs" />
-    <None Include="Script1.fsx" />
     <None Include="Script2.fsx" />
   </ItemGroup>
   <ItemGroup>
