@@ -59,8 +59,10 @@
     <Content Include="packages.config" />
     <Compile Include="StackCalculator2.fs" />
     <Compile Include="StackCalculator2Tests.fs" />
+    <Compile Include="CountdownSolver.fs" />
     <Compile Include="Program.fs" />
     <None Include="Script2.fsx" />
+    <None Include="Script3.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">

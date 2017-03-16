@@ -35,3 +35,8 @@ let ``1 2 + 4 + 5 + = 12``()=
     |> execute
     |> should equal 12
 
+[<Test>]
+let broken() = 
+    [Number(1);Number(2);Operator(+);Number(3);Operator(+)]
+    |> execute
+    |> should equal 6

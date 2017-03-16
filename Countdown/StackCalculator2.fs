@@ -6,14 +6,15 @@ type Item =
 
 //type Items = Items of List<Item>
 
-let execute items = 
-    let executeTop = 
-        function
-        | Number(a)::Number(b)::Operator(o)::rest -> Number(o a b)::rest
-        | _ -> failwith "Error"
+let executeTop = 
+    function
+    | Number(a)::Number(b)::Operator(o)::rest -> Number(o a b)::rest
+    | [Number(x)] -> [Number(x)]
+    | _ -> failwith "Error"
 
-    let rec executeRest = 
-        function
+let execute items = 
+    let rec executeRest items = 
+        match items with
         | [Number(x)] -> [Number(x)]
         | x -> items |> executeTop |> executeRest
 
