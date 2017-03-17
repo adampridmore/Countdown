@@ -1,6 +1,7 @@
 ﻿module CountdownSolver
 
 open StackCalculator2
+open GetCombinations
 
 let mergeOperatorsIntoNumbers numbers (operators : 'T seq) =
     let operatorsArray = operators |> Seq.toArray
@@ -13,3 +14,13 @@ let mergeOperatorsIntoNumbers numbers (operators : 'T seq) =
     |> Seq.collect id
 
 
+
+let getTotalsForNumberList (numbers: Item list) = 
+
+    let operators = [Operator(+);Operator(-);Operator(*);Operator(/)]
+
+    let numberOfOpertors = numbers.Length - 1
+
+    getCombinations2 numberOfOpertors operators
+    |> Seq.map (fun operatorSequence -> mergeOperatorsIntoNumbers numbers operatorSequence)
+    |> Seq.map execute

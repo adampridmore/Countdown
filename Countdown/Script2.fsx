@@ -16,13 +16,9 @@ open GetCombinations
 //let numbers = [Number(75);Number(100);Number(3);Number(4);Number(5);Number(6)]
 //let numbers = [Number(75);Number(100);Number(4);Number(5);Number(6)]
 let numbers = [Number(75);Number(100);Number(5);Number(6);Number(4)]
-let operators = [Operator(+);Operator(-);Operator(*);Operator(/)]
 //let numbers = ["75";"100";"5";"6";"4"]
 //let operators = ["+";"-";"*";"/"]
 
-let numberOfOpertors = numbers.Length - 1
-
-getCombinations2 numberOfOpertors operators
-|> Seq.map (fun operatorSequence -> mergeOperatorsIntoNumbers numbers operatorSequence)
-|> Seq.map execute
-|> Seq.iter (printfn "%d")
+numbers 
+|> getTotalsForNumberList
+|> Seq.iter (printfn "%A")
