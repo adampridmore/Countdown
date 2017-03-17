@@ -24,3 +24,12 @@ let getCombinations length max =
         yield firstNumbers
         yield! Seq.unfold unfolder firstNumbers
     }
+
+let getCombinations2 length items =
+    let itemsArray = items |> Seq.toArray
+
+    let mapCombination numbers = 
+        numbers |> Seq.map(fun n -> itemsArray.[n])
+        
+    getCombinations length (items |> Seq.length)
+    |> Seq.map mapCombination

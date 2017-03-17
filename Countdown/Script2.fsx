@@ -54,3 +54,13 @@ getCombinations 3 16
 |> Seq.map (Seq.toList >> List.rev)
 |> Seq.iter (printfn "%A")
 
+let getCombinations2 length items =
+    let itemsArray = items |> Seq.toArray
+    let mapCombination numbers = 
+        numbers |> Seq.map(fun n -> itemsArray.[n])
+        
+    getCombinations length (items |> Seq.length)
+    |> Seq.map mapCombination
+
+getCombinations2 3 ['a';'b']
+|> Seq.iter (printfn "%A")
