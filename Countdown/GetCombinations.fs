@@ -25,9 +25,3 @@ let getCombinations length max =
         yield numbers
         yield! Seq.unfold unfolder numbers
     }
-
-getCombinations 2 10
-|> Seq.map (Seq.toList)
-|> Seq.map (List.rev)
-|> Seq.iter (printfn "%A")
-
