@@ -13,11 +13,13 @@ let executeTop =
     | _ -> failwith "Error"
 
 let execute items = 
-    let rec executeRest items = 
-        match items with
-        | [Number(x)] -> [Number(x)]
-        | x -> items |> executeTop |> executeRest
+    let itemsList = items |> Seq.toList
 
-    match (items |> executeRest) with
+    let rec executeRest itemsList = 
+        match itemsList with
+        | [Number(x)] -> [Number(x)]
+        | x -> itemsList |> executeTop |> executeRest
+
+    match (itemsList |> executeRest) with
     | [Number(x)] -> x
     | x -> failwith "Error"
