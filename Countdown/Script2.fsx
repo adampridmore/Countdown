@@ -45,13 +45,20 @@ open Microsoft.FSharp.Collections
 //let numbers, target = [100;75;6;5;4] , 744
 //let numbers, target = [3; 7; 6; 2; 1; 7] , 824
 // 2, 4, 5, 9, 10 and 100 into a figure of 566.
-//let numbers, target = [75;6;50;100;3;25], 952
-let numbers, target = [1;2;3;4;5;6;7;8;9;10], 952
+let numbers, target = [75;6;50;100;3;25], 952
+//let numbers, target = [1;2;3;4;5;6;7;8;9;10], 952
 
 
 let numbersToItemNumbers numbers =
     numbers 
     |> Seq.map (fun n->Item.Number(n))
+
+let stringifyItems (items : Item seq) = 
+    items 
+    |> Seq.map (sprintf "%O")
+    |> Seq.reduce (fun a b -> sprintf "%s %s" a b)
+
+let printResults (total, items) = sprintf "%d -> %s" total (items |> stringifyItems)
 
 #time "on" 
 
@@ -70,7 +77,8 @@ numbers
 |> PGetAllPerms
 |> PSeq.map numbersToItemNumbers
 |> PSeq.collect getTotalsForNumberList
-|> PSeq.filter (fun total -> total = target)
+|> PSeq.filter (fun (total, _) -> total = target)
+|> PSeq.map printResults
 //|> Seq.find ( (=) target)
 //|> Seq.distinct
 //|> Seq.length
@@ -78,9 +86,12 @@ numbers
 //|> Seq.length |> printfn "%d"
 
 
-
-
 // TODO
 // - Integer maths -> should use double or decimal
 // - Less than all the numbers
 // - http://ccg.doc.gold.ac.uk/papers/colton_aisb14a.pdf
+
+
+
+[Plus;Number(123)] |> stringifyItems
+

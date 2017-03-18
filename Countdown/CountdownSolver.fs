@@ -14,13 +14,11 @@ let mergeOperatorsIntoNumbers numbers (operators : 'T seq) =
     |> Seq.collect id
 
 
-
 let getTotalsForNumberList (numbers: Item seq) = 
 
-    let operators = [Operator(+);Operator(-);Operator(*);Operator(/)]
-
+    let operators = [Plus;Minus;Multiply;Divide]
     let numberOfOpertors = (numbers |> Seq.length) - 1
 
     getCombinations2 numberOfOpertors operators
     |> Seq.map (fun operatorSequence -> mergeOperatorsIntoNumbers numbers operatorSequence)
-    |> Seq.map execute
+    |> Seq.map (fun operatorSequence -> (operatorSequence |> execute, operatorSequence) )
