@@ -1,4 +1,16 @@
-﻿#r @"..\packages\MyFSharpHelpers.1.0.1.0\lib\net461\MyFSharpHelpers.dll"
+﻿#r @"..\packages\FSPowerPack.Parallel.Seq.Community.3.0.0.0\Lib\Net40\FSharp.PowerPack.Parallel.Seq.dll"
+#r @"..\packages\MyFSharpHelpers.1.0.1.0\lib\net461\MyFSharpHelpers.dll"
+
+//[0;1;2;3;4;5;6;7;8;9]
+//|> Permutations.PGetAllPerms
+
+//#r @"..\packages\FSPowerPack.Parallel.Seq.Community.3.0.0.0\Lib\Net40\FSharp.PowerPack.Parallel.Seq.dll"
+//
+//open Microsoft.FSharp.Collections
+//
+//[0;1;2;3;4;5;6;7;8;9]
+//|> PSeq.map (id)
+
 
 #load "StackCalculator2.fs"
 #load "GetCombinations.fs"
@@ -8,6 +20,7 @@ open StackCalculator2
 open CountdownSolver
 open GetCombinations
 open Permutations
+open Microsoft.FSharp.Collections
 
 // 1 2 + 3 + = 6 
 // 1 2 + 3 * = 9
@@ -29,33 +42,45 @@ open Permutations
 
 //let numbers = [75;100;5;6;4]
 
-
-//let numbers = [100;75;6;5;4] // 744
-let numbers = [3; 7; 6; 2; 1; 7] //and a target of 824
-let target = 824
-
-
+//let numbers, target = [100;75;6;5;4] , 744
+//let numbers, target = [3; 7; 6; 2; 1; 7] , 824
 // 2, 4, 5, 9, 10 and 100 into a figure of 566.
+//let numbers, target = [75;6;50;100;3;25], 952
+let numbers, target = [1;2;3;4;5;6;7;8;9;10], 952
+
+
 let numbersToItemNumbers numbers =
     numbers 
     |> Seq.map (fun n->Item.Number(n))
 
+#time "on" 
 
-// PGetAllPerms
- 
+//numbers 
+//|> permutations 
+//|> Seq.map numbersToItemNumbers
+//|> Seq.collect getTotalsForNumberList
+//|> Seq.filter (fun total -> total = target)
+////|> Seq.find ( (=) target)
+////|> Seq.distinct
+////|> Seq.length
+//|> Seq.iter (printfn "%A")
+////|> Seq.length |> printfn "%d"
+
 numbers 
-|> permutations 
-|> Seq.map numbersToItemNumbers
-|> Seq.collect getTotalsForNumberList
-|> Seq.where (fun total -> total = target)
+|> PGetAllPerms
+|> PSeq.map numbersToItemNumbers
+|> PSeq.collect getTotalsForNumberList
+|> PSeq.filter (fun total -> total = target)
 //|> Seq.find ( (=) target)
 //|> Seq.distinct
 //|> Seq.length
-//|> Seq.iter (printfn "%A")
-|> Seq.length
-|> printfn "%d"
+|> Seq.iter (printfn "%A")
+//|> Seq.length |> printfn "%d"
+
+
+
 
 // TODO
 // - Integer maths -> should use double or decimal
 // - Less than all the numbers
-
+// - http://ccg.doc.gold.ac.uk/papers/colton_aisb14a.pdf
