@@ -40,3 +40,12 @@ let broken() =
     [Number(1m);Number(2m);Plus;Number(3m);Plus]
     |> execute
     |> should equal 6m
+
+[<Test>]
+let ``toString for Number``()= 
+    (Number(1m)).ToString() |> should equal "1"
+
+[<Test>]
+let ``toString for Operator``()= 
+    (Plus).ToString() |> should equal "+"
+    
