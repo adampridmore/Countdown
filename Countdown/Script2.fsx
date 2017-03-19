@@ -1,5 +1,5 @@
 ﻿#r @"..\packages\FSPowerPack.Parallel.Seq.Community.3.0.0.0\Lib\Net40\FSharp.PowerPack.Parallel.Seq.dll"
-#r @"..\packages\MyFSharpHelpers.1.0.1.0\lib\net461\MyFSharpHelpers.dll"
+#r @"..\packages\MyFSharpHelpers.1.0.2.0\lib\net461\MyFSharpHelpers.dll"
 
 //[0;1;2;3;4;5;6;7;8;9]
 //|> Permutations.PGetAllPerms
@@ -45,9 +45,14 @@ open Microsoft.FSharp.Collections
 //let numbers, target = [100;75;6;5;4] , 744
 //let numbers, target = [3; 7; 6; 2; 1; 7] , 824
 // 2, 4, 5, 9, 10 and 100 into a figure of 566.
-let numbers, target = [75;6;50;100;3;25], 952
-//let numbers, target = [1;2;3;4;5;6;7;8;9;10], 952
 
+//let numbers, target = [75m;6m;50m;100m;3m;25m], 952m // The famous one
+//let numbers, target = [25m;50m;75m;100m;3m;6m], 952m // The famous one
+
+// let numbers, target = [50m;3m;25m;3m;75m;100m], 996m // Unique
+
+//https://www.youtube.com/watch?v=n8-mx3RSvOQ
+let numbers, target = [25m;100m;75m;50m;6m;4m], 821m
 
 let numbersToItemNumbers numbers =
     numbers 
@@ -58,7 +63,7 @@ let stringifyItems (items : Item seq) =
     |> Seq.map (sprintf "%O")
     |> Seq.reduce (fun a b -> sprintf "%s %s" a b)
 
-let printResults (total, items) = sprintf "%d -> %s" total (items |> stringifyItems)
+let printResults ( (total: num) , items) = sprintf "%0.0f -> %s" total (items |> stringifyItems)
 
 #time "on" 
 
@@ -78,20 +83,16 @@ numbers
 |> PSeq.map numbersToItemNumbers
 |> PSeq.collect getTotalsForNumberList
 |> PSeq.filter (fun (total, _) -> total = target)
+//|> PSeq.find(fun (total, _) -> total = target) |> PSeq.singleton
 |> PSeq.map printResults
-//|> Seq.find ( (=) target)
-//|> Seq.distinct
-//|> Seq.length
 |> Seq.iter (printfn "%A")
-//|> Seq.length |> printfn "%d"
-
 
 // TODO
-// - Integer maths -> should use double or decimal
+// - Integer maths -> should use double or decimal - DONE
 // - Less than all the numbers
+//      - When executing fall out if total matched?
 // - http://ccg.doc.gold.ac.uk/papers/colton_aisb14a.pdf
-
-
-
-[Plus;Number(123)] |> stringifyItems
+// Other rules: (From: http://datagenetics.com/blog/august32014/index.html)
+// - If at any time the intermediate solution becomes negative, we can instantly bail on that solution.
+// - Similarly if the intermediate solution becomes non-integer.
 

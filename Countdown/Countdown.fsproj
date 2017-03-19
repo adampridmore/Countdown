@@ -85,7 +85,7 @@
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="MyFSharpHelpers">
-      <HintPath>..\packages\MyFSharpHelpers.1.0.1.0\lib\net461\MyFSharpHelpers.dll</HintPath>
+      <HintPath>..\packages\MyFSharpHelpers.1.0.2.0\lib\net461\MyFSharpHelpers.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="nunit.framework">

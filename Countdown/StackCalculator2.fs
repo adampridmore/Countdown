@@ -1,14 +1,16 @@
 ﻿module StackCalculator2
 
+type num = decimal
+
 [<StructuredFormatDisplay("{name}")>]
 type Operator = {
-    fn : (int -> int -> int)
+    fn : (num -> num -> num)
     name : string
 }
 
 type Item = 
     | Operator of Operator
-    | Number of int
+    | Number of num
     override m.ToString() = 
         match m with
         | Operator o -> o.name
