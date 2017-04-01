@@ -52,18 +52,9 @@ let parseStringToStack =
         | true -> Some(i)
         | false -> None
 
-    let parseOperator text = 
-        match text with
-        | "+" -> Plus
-        | "-" -> Minus
-        | "*" -> Multiply
-        | "/" -> Divide
-        | x -> failwith (sprintf "Invalid item: %s" text)
-
     let parse (item:string) =
         match tryPaseInt(item) with
-        | Some(x) -> Number(x |> decimal)
-        | None -> (item |> parseOperator)
+        | Some(x) -> x |> decimal
+        | None -> failwith (sprintf "Invalid number: %s" item)
 
-
-    split >> Seq.map parse
+    split >> Seq.map parse >> Seq.toList

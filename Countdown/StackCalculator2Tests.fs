@@ -51,21 +51,8 @@ let ``toString for Operator``()=
 
 [<Test>]
 let ``parse string to stack`` ()=
-    let stack = "1 2 +" |> parseStringToStack |> Seq.toList
-    
-    let toDecimal = 
-            function
-            | Number(x) -> Some(x)
-            | Operator(_) -> None 
-
-    let numbers = 
-        stack 
-        |> Seq.choose toDecimal 
-        |> Seq.toList
-
-    numbers.[0] |> should equal (1m)
-    numbers.[1] |> should equal (2m)
-    stack.[2] |> should equal Plus
+    "1 2" |> parseStringToStack 
+    |> should equal [1m;2m]
 
 
 //[<Test>]

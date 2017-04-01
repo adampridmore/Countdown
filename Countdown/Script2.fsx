@@ -52,10 +52,10 @@ open Microsoft.FSharp.Collections
 // let numbers, target = [50m;3m;25m;3m;75m;100m], 996m // Unique
 
 //https://www.youtube.com/watch?v=n8-mx3RSvOQ
-// let numbers, target = [25m;100m;75m;50m;6m;4m], 821m
-//let numbers, target = [25m;100m;75m;50m;6m;2m;3m], 1000m
-//let numbers, target = [100m;50m;5m;10m;4m;5m], 579m
-let numbers, target = [50m;5m;7m;9m;10m;6m], 965m
+//let numbers, target = "25 100 75 50 6 4", 821m
+//let numbers, target = "25 100 75 50 6 2 3", 1000m
+//let numbers, target = "100 50 5 10 4 5", 579m
+let numbers, target = "50 5 7 9 10 6", 965m
 
 let numbersToItemNumbers numbers =
     numbers 
@@ -80,6 +80,7 @@ let printResults ( (total: num) , items) = sprintf "%0.0f -> %s" total (items |>
 //|> Seq.iter (printfn "%A")
 
 numbers 
+|> parseStringToStack
 |> PGetAllPerms
 |> PSeq.map numbersToItemNumbers
 |> PSeq.collect getTotalsForNumberList
