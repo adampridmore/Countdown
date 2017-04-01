@@ -52,7 +52,10 @@ open Microsoft.FSharp.Collections
 // let numbers, target = [50m;3m;25m;3m;75m;100m], 996m // Unique
 
 //https://www.youtube.com/watch?v=n8-mx3RSvOQ
-let numbers, target = [25m;100m;75m;50m;6m;4m], 821m
+// let numbers, target = [25m;100m;75m;50m;6m;4m], 821m
+//let numbers, target = [25m;100m;75m;50m;6m;2m;3m], 1000m
+//let numbers, target = [100m;50m;5m;10m;4m;5m], 579m
+let numbers, target = [50m;5m;7m;9m;10m;6m], 965m
 
 let numbersToItemNumbers numbers =
     numbers 
@@ -66,17 +69,15 @@ let stringifyItems (items : Item seq) =
 let printResults ( (total: num) , items) = sprintf "%0.0f -> %s" total (items |> stringifyItems)
 
 #time "on" 
-
+//
 //numbers 
-//|> permutations 
+//|> getAllPerms
 //|> Seq.map numbersToItemNumbers
 //|> Seq.collect getTotalsForNumberList
-//|> Seq.filter (fun total -> total = target)
-////|> Seq.find ( (=) target)
-////|> Seq.distinct
-////|> Seq.length
+//|> Seq.filter (fun (total, _) -> total = target)
+////|> Seq.find(fun (total, _) -> total = target) |> PSeq.singleton
+//|> Seq.map printResults
 //|> Seq.iter (printfn "%A")
-////|> Seq.length |> printfn "%d"
 
 numbers 
 |> PGetAllPerms

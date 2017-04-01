@@ -48,4 +48,33 @@ let ``toString for Number``()=
 [<Test>]
 let ``toString for Operator``()= 
     (Plus).ToString() |> should equal "+"
+
+[<Test>]
+let ``parse string to stack`` ()=
+    let stack = "1 2 +" |> parseStringToStack |> Seq.toList
     
+    let toDecimal = 
+            function
+            | Number(x) -> Some(x)
+            | Operator(_) -> None 
+
+    let numbers = 
+        stack 
+        |> Seq.choose toDecimal 
+        |> Seq.toList
+
+    numbers.[0] |> should equal (1m)
+    numbers.[1] |> should equal (2m)
+    stack.[2] |> should equal Plus
+
+
+//[<Test>]
+//let ``bail out if negative``() = 
+//    [Number(1m);Number(2m);Minus]
+//    |> execute2
+//    |> should equal Invalid
+
+//[<Test>]
+//let ``Drop out if found solution before end``()=
+//    [Number(1m);Number(2m]
+
