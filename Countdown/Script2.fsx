@@ -57,9 +57,6 @@ open Microsoft.FSharp.Collections
 //let numbers, target = "100 50 5 10 4 5", 579m
 let numbers, target = "50 5 7 9 10 6", 965m
 
-let numbersToItemNumbers numbers =
-    numbers 
-    |> Seq.map (fun n->Item.Number(n))
 
 let stringifyItems (items : Item seq) = 
     items 

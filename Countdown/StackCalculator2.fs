@@ -24,6 +24,17 @@ let Divide      = Operator({fn = (/);     name = "/"})
 
 //type Items = Items of List<Item>
 
+let itemToDecimal num =
+    match num with
+    | Number(x) -> x |> decimal
+    | _ -> failwith "Operator is not a number"
+
+let isValid num =  
+    match num with
+    | x when x < 0m -> false
+    | x when x - System.Math.Floor(x) > 0m -> false
+    | _ -> true
+
 let executeTop = 
     function
     | Number(a)::Number(b)::Operator(o)::rest -> Number(o.fn a b)::rest
@@ -42,6 +53,23 @@ let execute items =
     | [Number(x)] -> x
     | x -> failwith "Error"
 
+let execute2 items = 
+    let itemsList = items |> Seq.toList
+
+    let rec executeRest (results,itemsList) = 
+        match itemsList with
+        | [Number(x)] -> (results, [Number(x)])
+        | itemsList -> 
+            let newStack = itemsList |> executeTop 
+            let topNumber = newStack |> Seq.head |> itemToDecimal
+            match topNumber |> isValid with
+            | true -> executeRest (topNumber::results, newStack)
+            | false -> (results, [itemsList |> Seq.head ] )
+
+    match executeRest ([], itemsList) with
+    | results,[Number(x)] -> (results, x)
+    | _ -> failwith "Error"
+
 let parseStringToStack = 
     let split (text:string) =
         text.Split([|" "|],System.StringSplitOptions.RemoveEmptyEntries)
@@ -58,3 +86,7 @@ let parseStringToStack =
         | None -> failwith (sprintf "Invalid number: %s" item)
 
     split >> Seq.map parse >> Seq.toList
+
+let numbersToItemNumbers numbers =
+    numbers 
+    |> Seq.map (fun n->Item.Number(n))

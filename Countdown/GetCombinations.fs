@@ -28,8 +28,7 @@ let getCombinations length max =
 let getCombinations2 length items =
     let itemsArray = items |> Seq.toArray
 
-    let mapCombination numbers = 
-        numbers |> Seq.map(fun n -> itemsArray.[n])
+    let mapCombination = Seq.map(fun n -> itemsArray.[n])
         
-    getCombinations length (items |> Seq.length)
+    getCombinations length (items |> Seq.length) 
     |> Seq.map mapCombination

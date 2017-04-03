@@ -16,9 +16,12 @@ let mergeOperatorsIntoNumbers numbers (operators : 'T seq) =
 
 let getTotalsForNumberList (numbers: Item seq) = 
 
+    let executeItemSequence (items: Item seq) = 
+        items |> execute
+
     let operators = [Plus;Minus;Multiply;Divide]
     let numberOfOpertors = (numbers |> Seq.length) - 1
 
     getCombinations2 numberOfOpertors operators
     |> Seq.map (fun operatorSequence -> mergeOperatorsIntoNumbers numbers operatorSequence)
-    |> Seq.map (fun operatorSequence -> (operatorSequence |> execute, operatorSequence) )
+    |> Seq.map (fun itemSequence -> (itemSequence |> executeItemSequence, itemSequence) )

@@ -36,12 +36,6 @@ let ``1 2 + 4 + 5 + = 12``()=
     |> should equal 12m
 
 [<Test>]
-let broken() = 
-    [Number(1m);Number(2m);Plus;Number(3m);Plus]
-    |> execute
-    |> should equal 6m
-
-[<Test>]
 let ``toString for Number``()= 
     (Number(1m)).ToString() |> should equal "1"
 
@@ -54,14 +48,24 @@ let ``parse string to stack`` ()=
     "1 2" |> parseStringToStack 
     |> should equal [1m;2m]
 
+// 1 2 3 4 5
+[<Test>]
+let ``1 2 + 4 + 5 + = 12   (execute2)``()=
+    [Number(1m);Number(2m);Plus;Number(4m);Plus;Number(5m);Plus]
+    |> execute2
+    |> should equal ([12m;7m;3m] ,12m)
 
-//[<Test>]
-//let ``bail out if negative``() = 
-//    [Number(1m);Number(2m);Minus]
-//    |> execute2
-//    |> should equal Invalid
 
-//[<Test>]
-//let ``Drop out if found solution before end``()=
-//    [Number(1m);Number(2m]
+[<Test>]
+let ``Stop on negative``()=
+    [Number(1m);Number(2m);Minus]
+    |> execute2
+    |> should equal ( List.empty<decimal> ,1m)
+
+[<Test>]
+let ``Stop on fraction``()=
+    [Number(1m);Number(2m);Divide]
+    |> execute2
+    |> should equal ( List.empty<decimal> ,1m)
+
 
