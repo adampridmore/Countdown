@@ -17,7 +17,7 @@ let mergeOperatorsIntoNumbers numbers (operators : 'T seq) =
 let getTotalsForNumberList (numbers: Item seq) = 
 
     let executeItemSequence (items: Item seq) = 
-        items |> execute
+        items |> execute2
 
     let operators = [Plus;Minus;Multiply;Divide]
     let numberOfOpertors = (numbers |> Seq.length) - 1

@@ -53,19 +53,19 @@ let ``parse string to stack`` ()=
 let ``1 2 + 4 + 5 + = 12   (execute2)``()=
     [Number(1m);Number(2m);Plus;Number(4m);Plus;Number(5m);Plus]
     |> execute2
-    |> should equal ([12m;7m;3m] ,12m)
+    |> should equal ([|12m;7m;3m|])
 
 
 [<Test>]
 let ``Stop on negative``()=
     [Number(1m);Number(2m);Minus]
     |> execute2
-    |> should equal ( List.empty<decimal> ,1m)
+    |> should equal ( List.empty<decimal>)
 
 [<Test>]
 let ``Stop on fraction``()=
     [Number(1m);Number(2m);Divide]
     |> execute2
-    |> should equal ( List.empty<decimal> ,1m)
+    |> should equal ( List.empty<decimal>)
 
 

@@ -46,17 +46,16 @@ open Microsoft.FSharp.Collections
 //let numbers, target = [3; 7; 6; 2; 1; 7] , 824
 // 2, 4, 5, 9, 10 and 100 into a figure of 566.
 
-//let numbers, target = [75m;6m;50m;100m;3m;25m], 952m // The famous one
-//let numbers, target = [25m;50m;75m;100m;3m;6m], 952m // The famous one
+//let numbers, target = "25 50 75 100 3 6", 952m // The famous one
 
-// let numbers, target = [50m;3m;25m;3m;75m;100m], 996m // Unique
+// let numbers, target = "50 3 25 3 75 100", 996m // [50m;3m;25m;3m;75m;100m], 996m // Unique
+let numbers, target = "4 25 1 1 1 1", 100m // Easy
 
 //https://www.youtube.com/watch?v=n8-mx3RSvOQ
 //let numbers, target = "25 100 75 50 6 4", 821m
 //let numbers, target = "25 100 75 50 6 2 3", 1000m
 //let numbers, target = "100 50 5 10 4 5", 579m
-let numbers, target = "50 5 7 9 10 6", 965m
-
+//let numbers, target = "50 5 7 9 10 6", 965m
 
 let stringifyItems (items : Item seq) = 
     items 
@@ -64,6 +63,9 @@ let stringifyItems (items : Item seq) =
     |> Seq.reduce (fun a b -> sprintf "%s %s" a b)
 
 let printResults ( (total: num) , items) = sprintf "%0.0f -> %s" total (items |> stringifyItems)
+let printResults2 ( (totals: List<num>) , items) = 
+    let totalsText = totals |> Seq.map (sprintf "%0.0f" )|> Seq.reduce (sprintf "%s,%s")
+    sprintf "%s -> %s" totalsText (items |> stringifyItems)
 
 #time "on" 
 //
@@ -81,9 +83,12 @@ numbers
 |> PGetAllPerms
 |> PSeq.map numbersToItemNumbers
 |> PSeq.collect getTotalsForNumberList
-|> PSeq.filter (fun (total, _) -> total = target)
-//|> PSeq.find(fun (total, _) -> total = target) |> PSeq.singleton
-|> PSeq.map printResults
+|> PSeq.filter (fun (totals, _) -> totals |> Seq.exists(fun total -> total = target) )
+//|> PSeq.map (fun (totals,items) -> (totals |> Seq.tryFind(fun total -> total = target) ) , items)
+//|> PSeq.filter(fun (t, _) -> t.IsSome)
+//|> PSeq.map (fun (t,i) -> (t.Value, i) )
+//|> PSeq.map printResults
+|> PSeq.map printResults2
 |> Seq.iter (printfn "%A")
 
 // TODO

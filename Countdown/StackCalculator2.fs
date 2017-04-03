@@ -58,7 +58,7 @@ let execute2 items =
 
     let rec executeRest (results,itemsList) = 
         match itemsList with
-        | [Number(x)] -> (results, [Number(x)])
+        | [Number(x)] -> (results, [])
         | itemsList -> 
             let newStack = itemsList |> executeTop 
             let topNumber = newStack |> Seq.head |> itemToDecimal
@@ -66,9 +66,8 @@ let execute2 items =
             | true -> executeRest (topNumber::results, newStack)
             | false -> (results, [itemsList |> Seq.head ] )
 
-    match executeRest ([], itemsList) with
-    | results,[Number(x)] -> (results, x)
-    | _ -> failwith "Error"
+    let results, _ = executeRest ([], itemsList) 
+    results
 
 let parseStringToStack = 
     let split (text:string) =
