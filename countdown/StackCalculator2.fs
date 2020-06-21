@@ -53,7 +53,7 @@ let execute items =
     | [Number(x)] -> x
     | x -> failwith "Error"
 
-let execute2 items = 
+let execute2 (items : seq<Item>) = 
     let itemsList = items |> Seq.toList
 
     let rec executeRest (results,itemsList) = 
@@ -73,8 +73,8 @@ let parseStringToStack =
     let split (text:string) =
         text.Split([|" "|],System.StringSplitOptions.RemoveEmptyEntries)
    
-    let tryPaseInt text =
-        let mutable i = 0
+    let tryPaseInt (text : string) =
+        let mutable i : int32 = 0
         match (System.Int32.TryParse(text, &i)) with
         | true -> Some(i)
         | false -> None
