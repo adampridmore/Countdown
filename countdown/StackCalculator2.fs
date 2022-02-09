@@ -69,7 +69,7 @@ let execute2 (items : seq<Item>) =
     let results, _ = executeRest ([], itemsList) 
     results
 
-let parseStringToStack = 
+let parseStringToStack : (string -> list<decimal>) = 
     let split (text:string) =
         text.Split([|" "|],System.StringSplitOptions.RemoveEmptyEntries)
    
@@ -86,6 +86,6 @@ let parseStringToStack =
 
     split >> Seq.map parse >> Seq.toList
 
-let numbersToItemNumbers numbers =
+let numbersToItemNumbers (numbers: seq<num>) : seq<Item> =
     numbers 
     |> Seq.map (fun n->Item.Number(n))

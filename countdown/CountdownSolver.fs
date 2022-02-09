@@ -14,7 +14,7 @@ let mergeOperatorsIntoNumbers numbers (operators : 'T seq) =
   |> Seq.collect id
 
 
-let getTotalsForNumberList (numbers: Item seq) = 
+let getTotalsForNumberList (numbers: Item seq) : seq<list<decimal> * seq<Item>> =
 
   let executeItemSequence (items: Item seq) = 
     items |> execute2
