@@ -7,9 +7,11 @@ open Permutations
 open Microsoft.FSharp.Collections
 
 let [<EntryPoint>] main _ =   
+//   let numbers, target = "1 2 3 4", 21m // Easy
+  let numbers, target = "1 3 10 16", 221m // Incorrect...
+  // (10 + 3) * (16 + 1) == 221
+  // 10 3 + 16 1 + *
   
-  let numbers, target = "4 25 1 1 1 1", 100m // Easy
-
   let stringifyItems (items : Item seq) = 
       items 
       |> Seq.map (sprintf "%O")
