@@ -11,10 +11,10 @@ let isMatch(letters: String) (word: String) : bool =
   let rec test(remainingLetters: List<char>) (remainingWord: List<Char>) : bool =
     match (remainingLetters, remainingWord) with
     | (letter::tailLetters), (wordLetter::tailWord) when letter = wordLetter -> test tailLetters tailWord
-    | (letter::tailLetters), (wordLetter::tailWord) when letter <> wordLetter -> test tailLetters (wordLetter::tailWord)
-    | ([],wordLetter::tail) -> false
+    | (letter::tailLetters), (word) -> test tailLetters (word)
+    | ([] , _::_) -> false
     | _,[] -> true
-    | letters, word -> raise (Exception($"Unexpected pattern match: Letters: %A{letters} Word:%A{word}"))
+    | letters, word -> raise (Exception($"Unexpected no pattern match: Letters: %A{letters} Word:%A{word}"))
     
   test sortedLetters wordSorted
 
@@ -26,12 +26,6 @@ let LettersAssert letters word expectedResult : Unit =
   else
     let error = $"Expected match: %b{expectedResult} %s{word} to match %s{letters}"
     raise (Exception(error))
-
-// [<Fact>]
-// let ``test loading file`` () =
-//   let words = File.ReadAllLines("corncob_lowercase.words")
-
-//   printfn "%d" (words.Length)
 
 [<Fact>]
 let ``Is Match When no Match``() =
