@@ -12,7 +12,10 @@
     <Compile Include="Tests.fs" />
     <Compile Include="Program.fs" />
     <None Include="corncob_lowercase.words">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="words_alpha.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

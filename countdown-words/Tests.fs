@@ -27,6 +27,9 @@ let LettersAssert letters word expectedResult : Unit =
     let error = $"Expected match: %b{expectedResult} %s{word} to match %s{letters}"
     raise (Exception(error))
 
+
+let wordsFileName = "words_alpha.txt"
+
 [<Fact>]
 let ``Is Match When no Match``() =
   let letters = "abc"
@@ -73,9 +76,9 @@ let ``Real test``() =
 
 [<Fact>]
 let ``Search for best match``() =
-  let letters = "zorosmofrksw"
+  let letters = "NOGROIIAS".ToLower()
 
-  let words = File.ReadAllLines("corncob_lowercase.words")
+  let words = File.ReadAllLines(wordsFileName)
 
   words
   |> Seq.filter (fun word -> isMatch letters word)
