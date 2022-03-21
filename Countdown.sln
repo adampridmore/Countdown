@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "countdown-words", "countdown-words\countdown-words.fsproj", "{B18ED26D-E4BC-4B82-931E-ECCBAE0E4053}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "countdown", "countdown\countdown.fsproj", "{B18ED26D-E4BC-4B82-931E-ECCBAE0E4053}"
 EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
