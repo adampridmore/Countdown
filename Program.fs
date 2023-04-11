@@ -37,7 +37,7 @@ let doLetters letters =
 let [<EntryPoint>] main args = 
 
   let printhelp() = 
-    printfn """usage dotnet [-l|-n] [letters|<"numbers" target>]
+    printfn """usage dotnet run [-l|-n] [letters|<"numbers" target>]
 For example:
   Solve letters
     dotnet run -l abc
