@@ -283,3 +283,5 @@ __pycache__/
 
 # End of https://www.gitignore.io/api/visualstudio
 .ionide
+
+.DS_Store
