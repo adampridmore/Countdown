@@ -9,10 +9,9 @@ let isMatch(letters: String) (word: String) : bool =
   let rec test(remainingLetters: List<char>) (remainingWord: List<Char>) : bool =
     match (remainingLetters, remainingWord) with
     | (letter::tailLetters), (wordLetter::tailWord) when letter = wordLetter -> test tailLetters tailWord
-    | (letter::tailLetters), (word) -> test tailLetters (word)
+    | (_::tailLetters), (word) -> test tailLetters (word)
     | ([] , _::_) -> false
     | _,[] -> true
-    | letters, word -> raise (Exception($"Unexpected no pattern match: Letters: %A{letters} Word:%A{word}"))
     
   test sortedLetters wordSorted
 
