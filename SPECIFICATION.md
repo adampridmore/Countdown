@@ -22,6 +22,14 @@ Given a set of 9 letters (a mix of vowels and consonants), find the longest vali
 - Each letter can only be used as many times as it appears in the input
 - Longer words score more points
 
+### Dictionary Note
+
+The actual TV show uses the **Oxford Dictionary of English** as its official reference, with adjudicators in "Dictionary Corner" checking contested words. This dictionary is not publicly available as a standalone word list.
+
+This implementation uses `words_alpha.txt`, a general English word list (~370k words). For more authentic results, alternatives include:
+- **SOWPODS** - The Scrabble word list used in UK/international tournaments
+- **Collins Scrabble Words (CSW)** - Another competitive word game dictionary
+
 ### How It's Solved
 
 **Algorithm:** Dictionary filtering with letter frequency matching
