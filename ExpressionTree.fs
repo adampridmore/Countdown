@@ -57,7 +57,7 @@ let private precedence (op: Operator) =
 let private isRightAssociativeIssue (parentOp: Operator) =
     parentOp.name = "-" || parentOp.name = "/"
 
-/// Convert an expression tree to human-readable infix notation with minimal parentheses
+/// Convert an expression tree to human-readable infix notation with clarifying parentheses
 let toInfix (expr: Expr) : string =
     let rec toInfixImpl (expr: Expr) (parentOp: Operator option) (isRight: bool) : string =
         match expr with
@@ -71,7 +71,9 @@ let toInfix (expr: Expr) : string =
             | None -> inner
             | Some pOp ->
                 let needsParens =
-                    precedence op < precedence pOp ||
+                    // Always add parens when precedence differs (clarifying)
+                    precedence op <> precedence pOp ||
+                    // Still handle right-associativity issues for same precedence
                     (isRight && precedence op = precedence pOp && isRightAssociativeIssue pOp)
                 if needsParens then sprintf "(%s)" inner else inner
 
