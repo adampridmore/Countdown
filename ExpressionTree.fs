@@ -85,3 +85,26 @@ let toStepByStep (steps: Step list) : string =
     |> List.mapi (fun i step ->
         sprintf "  %d. %.0f %s %.0f = %.0f" (i + 1) step.Left step.Op step.Right step.Result)
     |> String.concat "\n"
+
+/// Check if an operator is commutative
+let private isCommutative (op: Operator) =
+    op.name = "+" || op.name = "*"
+
+/// Get a numeric "weight" for an expression (used for canonical ordering)
+/// Larger/simpler expressions should come first
+let rec private exprWeight (expr: Expr) : decimal =
+    match expr with
+    | Num n -> n
+    | BinOp(left, _, right) -> max (exprWeight left) (exprWeight right)
+
+/// Normalize an expression tree to canonical form (larger operands on left for commutative ops)
+let rec normalize (expr: Expr) : Expr =
+    match expr with
+    | Num _ -> expr
+    | BinOp(left, op, right) ->
+        let normLeft = normalize left
+        let normRight = normalize right
+        if isCommutative op && exprWeight normRight > exprWeight normLeft then
+            BinOp(normRight, op, normLeft)
+        else
+            BinOp(normLeft, op, normRight)

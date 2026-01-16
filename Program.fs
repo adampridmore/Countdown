@@ -8,9 +8,8 @@ let doNumbers (numbers:string) (target: string) =
   let targetNumber = target |> System.Decimal.Parse
   let numberList = numbers |> parseStringToStack
 
-  numberList
-  |> fun nums -> solveUnique nums targetNumber
-  |> Seq.iter (fun solution ->
+  solveBest numberList targetNumber 5
+  |> List.iter (fun solution ->
       printfn "%s = %.0f" (toInfix solution.Expression) solution.Result)
 
 let doLetters letters =
