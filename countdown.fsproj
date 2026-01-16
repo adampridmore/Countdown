@@ -16,7 +16,12 @@
     <Compile Include="CountdownSolver.fs" />
     <Compile Include="CountdownSolverTests.fs" />
     <Compile Include="permutations.fs" />
-    
+
+    <Compile Include="ExpressionTree.fs" />
+    <Compile Include="TreeGenerator.fs" />
+    <Compile Include="NumbersSolver.fs" />
+    <Compile Include="NumbersSolverTests.fs" />
+
     <Compile Include="Program.fs" />
     <None Include="corncob_lowercase.words">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
