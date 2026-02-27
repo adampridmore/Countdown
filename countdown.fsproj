@@ -1,8 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <RootNamespace>countdown_words</RootNamespace>
+    <RootNamespace>countdown</RootNamespace>
+    <AssemblyName>CountdownApp</AssemblyName>
     <IsPackable>false</IsPackable>
+    <UseAppHost>false</UseAppHost>
     <GenerateProgramFile>false</GenerateProgramFile>
   </PropertyGroup>
   <ItemGroup>
