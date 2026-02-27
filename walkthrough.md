@@ -1,4 +1,5 @@
 # Number Solver Performance Tuning
+
 ## Overview
 Replaced the brute-force enumeration of binary expression trees with a Dynamic Programming approach over subset bitmasks.
 
@@ -22,7 +23,7 @@ The test `Numbers solver performance` passes successfully and shows these exact 
 # Letter Solver Performance Tuning
 
 ## Overview
-Replaced string character sorting and recursive pattern matching with pre-calculated character frequency histograms.
+Evaluated replacing string character sorting and recursive pattern matching with pre-calculated character frequency histograms.
 
 ## Results
 - Evaluated performance locally on a tough 12-letter search (`zorosmofrksw` vs $370,000$ words).
@@ -30,8 +31,7 @@ Replaced string character sorting and recursive pattern matching with pre-calcul
 - **Histogram Algorithm Time**: $490 \text{ms}$
 - **Speedup**: ~**11%** faster execution speed.
 
-## Explanation of Strategy
-The original `WordSolver.isMatch` allocated a char array, converted it to an F# list, and ran `List.sort` on *every single dictionary word* and the player's letters.
+## Conclusion 
+The original `WordSolver.isMatch` approach allocated character arrays and dynamically sorted them via `List.sort` for every word in the dictionary. A frequency histogram approach successfully removed those allocations.
 
-By pre-calculating the character frequencies (a 26-slot `int[]`) for the player's letters *once*, we can evaluate whether any word in the dictionary is an anagram match simply by looping over the word's characters and subtracting from the frequency array without any heap allocations or sorting per word. 
-While $550 \text{ms}$ was already surprisingly fast to filter out 370k words, removing the sorting operations dropped the execution directly down to $490 \text{ms}$. Since the IO Read of `words_alpha.txt` makes up $\sim 300 \text{ms}$ of that runtime, the *actual* filtering algorithm speed improved dramatically under the hood!
+However, since analyzing all 370k words currently completes in barely half a second (the bulk of which is actually I/O file reading speeds), the ~11% functional execution speedup wasn't deemed significant enough to warrant complicating the codebase. The histogram logic has been **reverted** in favor of maintaining the simpler, cleaner recursive pattern matcher.
