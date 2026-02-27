@@ -11,6 +11,11 @@ Start the application using the .NET CLI:
 dotnet run
 ```
 
+*For active development with hot-reloading (auto-restarts on code changes):*
+```bash
+dotnet watch
+```
+
 *For maximum performance (highly recommended for the Numbers round), run in Release mode:*
 ```bash
 dotnet run -c Release
