@@ -1,7 +1,18 @@
 module NumbersSolver
 
+open StackCalculator2
 open ExpressionTree
 open TreeGenerator
+
+/// Extract Operator from Item
+let private getOp = function
+    | Operator op -> op
+    | _ -> failwith "Not an operator"
+
+let private plusOp = getOp Plus
+let private minusOp = getOp Minus
+let private mulOp = getOp Multiply
+let private divOp = getOp Divide
 
 /// A solution to a numbers puzzle
 type Solution = {
@@ -35,13 +46,75 @@ let scoreSolution (solution: Solution) : int =
 
 /// Find all solutions that reach the target number
 let solve (numbers: int list) (target: int) : Solution seq =
+    let n = List.length numbers
+    if n = 0 then Seq.empty else
+    
+    let maxMask = (1 <<< n) - 1
+    let memo = Array.create (maxMask + 1) []
+    
+    for i in 0 .. n - 1 do
+        let num = numbers.[i]
+        let mask = 1 <<< i
+        memo.[mask] <- [ (num, Num num, []) ]
+    
+    for size in 2 .. n do
+        for mask in 1 .. maxMask do
+            let mutable bitCount = 0
+            let mutable temp = mask
+            while temp > 0 do
+                bitCount <- bitCount + (temp &&& 1)
+                temp <- temp >>> 1
+                
+            if bitCount = size then
+                let resultsForMask = ResizeArray<int * Expr * Step list>()
+                let lowestBit = mask &&& -mask
+                let remainingMask = mask ^^^ lowestBit
+                
+                let mutable submask = remainingMask
+                while submask > 0 do
+                    let rightMask = submask
+                    let leftMask = mask ^^^ rightMask
+                    
+                    for lVal, lExpr, lSteps in memo.[leftMask] do
+                        for rVal, rExpr, rSteps in memo.[rightMask] do
+                            
+                            let addVal = lVal + rVal
+                            let addSteps = lSteps @ rSteps @ [{ Left = lVal; Op = "+"; Right = rVal; Result = addVal }]
+                            resultsForMask.Add(addVal, BinOp(lExpr, plusOp, rExpr), addSteps)
+                            
+                            let mulVal = lVal * rVal
+                            let mulSteps = lSteps @ rSteps @ [{ Left = lVal; Op = "*"; Right = rVal; Result = mulVal }]
+                            resultsForMask.Add(mulVal, BinOp(lExpr, mulOp, rExpr), mulSteps)
+                            
+                            let subVal1 = lVal - rVal
+                            if subVal1 >= 0 then
+                                let subSteps = lSteps @ rSteps @ [{ Left = lVal; Op = "-"; Right = rVal; Result = subVal1 }]
+                                resultsForMask.Add(subVal1, BinOp(lExpr, minusOp, rExpr), subSteps)
+                                
+                            let subVal2 = rVal - lVal
+                            if subVal2 >= 0 then
+                                let subSteps = rSteps @ lSteps @ [{ Left = rVal; Op = "-"; Right = lVal; Result = subVal2 }]
+                                resultsForMask.Add(subVal2, BinOp(rExpr, minusOp, lExpr), subSteps)
+
+                            if rVal <> 0 && lVal % rVal = 0 then
+                                let divVal1 = lVal / rVal
+                                let divSteps = lSteps @ rSteps @ [{ Left = lVal; Op = "/"; Right = rVal; Result = divVal1 }]
+                                resultsForMask.Add(divVal1, BinOp(lExpr, divOp, rExpr), divSteps)
+                                
+                            if lVal <> 0 && rVal % lVal = 0 then
+                                let divVal2 = rVal / lVal
+                                let divSteps = rSteps @ lSteps @ [{ Left = rVal; Op = "/"; Right = lVal; Result = divVal2 }]
+                                resultsForMask.Add(divVal2, BinOp(rExpr, divOp, lExpr), divSteps)
+
+                    submask <- (submask - 1) &&& remainingMask
+                
+                memo.[mask] <- resultsForMask |> Seq.toList
+    
     seq {
-        for expr in allExpressionsFor numbers do
-            let result, steps = evaluateWithSteps expr
-            match result with
-            | Some r when r = target ->
-                yield { Expression = expr; Result = r; Steps = steps }
-            | _ -> ()
+        for mask in 1 .. maxMask do
+            for rVal, expr, steps in memo.[mask] do
+                if rVal = target then
+                    yield { Expression = expr; Result = rVal; Steps = steps }
     }
 
 /// Find all solutions, deduplicated by normalized infix representation
