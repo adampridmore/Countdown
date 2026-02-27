@@ -20,7 +20,7 @@ Countdown/
 ├── readme.md                     # Usage documentation
 │
 ├── CORE MODULES:
-│   ├── Program.fs                # CLI entry point
+│   ├── Program.fs                # Web API entry point
 │   ├── WordSolver.fs             # Letters round solver
 │   ├── StackCalculator2.fs       # RPN arithmetic calculator
 │   ├── CountdownSolver.fs        # Numbers round orchestrator
@@ -60,22 +60,20 @@ let isMatch (letters: string) (word: string) : bool
 - Recursively matches, allowing unused letters
 - Correctly handles letter frequency (e.g., needs two 'a's to spell "aardvark")
 
-**CLI Usage:**
-```bash
-dotnet run -l bucteasdn
-# Output: educants, andesite, ... (sorted by length)
-```
+**Web UI Usage:**
+Submit letters via the Web UI in your browser, which queries:
+`GET /api/letters?q=bucteasdn`
 
 ### Numbers Round (`CountdownSolver.fs` + `StackCalculator2.fs`)
 
 Finds arithmetic expressions that reach a target number using given numbers and the four basic operators.
 
-**Algorithm:**
-1. Generate all permutations of the input numbers
-2. For each permutation, generate all operator combinations (+, -, *, /)
-3. Interleave numbers and operators into RPN (Reverse Polish Notation) sequences
-4. Evaluate using a stack-based calculator
-5. Filter results that reach the target and follow game rules
+**Algorithm (Dynamic Programming):**
+1. Uses a bottom-up Dynamic Programming approach with bitmasks.
+2. Represents subsets of available numbers as bitmasks.
+3. Iteratively combines smaller subsets' valid expressions to form larger ones.
+4. Heavily prunes invalid paths (negative intermediate results, fractional division).
+5. Memoizes intermediate sub-problem results to prevent evaluating duplicate operations.
 
 **Game Rules Enforced:**
 - All intermediate results must be positive integers
@@ -91,11 +89,9 @@ Finds arithmetic expressions that reach a target number using given numbers and 
 | `Permutations.fs` | Generates all orderings of numbers |
 | `GetCombinations.fs` | Generates all operator combinations |
 
-**CLI Usage:**
-```bash
-dotnet run -n "25 8 6 9 7 2" 682
-# Output: Solutions showing arithmetic to reach 682
-```
+**Web UI Usage:**
+Submit the numbers and target via the Web UI in your browser, which queries:
+`GET /api/numbers?numbers=25%208%206%209%207%202&target=682`
 
 ### Not Implemented
 
@@ -108,15 +104,16 @@ dotnet run -n "25 8 6 9 7 2" 682
 ### Module Dependency Graph
 
 ```
-Program.fs (CLI)
+wwwroot/ (Frontend HTML/JS/CSS)
+    │
+Program.fs (ASP.NET Minimal API)
     │
     ├── WordSolver.fs (letters game)
     │
-    └── CountdownSolver.fs (numbers game)
+    └── NumbersSolver.fs (numbers game)
             │
             ├── StackCalculator2.fs (RPN calculator)
-            ├── Permutations.fs (orderings)
-            └── GetCombinations.fs (operator combos)
+            └── ExpressionTree.fs (Expression evaluation)
 ```
 
 ### Key Design Decisions
@@ -214,9 +211,9 @@ dotnet build
 # Run tests
 dotnet test
 
-# Run CLI
-dotnet run -l <letters>           # Letters round
-dotnet run -n "<numbers>" <target> # Numbers round
+# Run Web App
+dotnet run -c Release
+# Then open http://localhost:5000 in your browser
 ```
 
 ---
