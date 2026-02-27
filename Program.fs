@@ -68,10 +68,8 @@ let main args =
             context.Response.WriteAsJsonAsync(results)
     ) |> ignore
 
-    // Default route
     app.MapGet("/", fun (context: HttpContext) ->
-        context.Response.Redirect("/index.html")
-        System.Threading.Tasks.Task.CompletedTask
+        context.Response.SendFileAsync("wwwroot/index.html")
     ) |> ignore
 
     let port = System.Environment.GetEnvironmentVariable("PORT")
