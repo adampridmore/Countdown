@@ -1,71 +1,69 @@
-﻿module StackCalculator2Tests
+module StackCalculator2Tests
 
 open StackCalculator2
 open FsUnit
 open Xunit
 
 [<Fact>]
-let ``1 2 + 3 + = 6``() = 
-    [Number(1m);Number(2m);Plus;Number(3m);Plus]
+let ``1 2 + 3 + = 6``() =
+    [Number 1;Number 2;Plus;Number 3;Plus]
     |> execute
-    |> should equal 6m
+    |> should equal 6
 
 [<Fact>]
-let ``1 2 + 3 * = 9``()= 
-    [Number(1m);Number(2m);Plus;Number(3m);Multiply]
+let ``1 2 + 3 * = 9``()=
+    [Number 1;Number 2;Plus;Number 3;Multiply]
     |> execute
-    |> should equal 9m
+    |> should equal 9
 
 [<Fact>]
-let ``1 2 * 3 + = 5``()= 
-    [Number(1m);Number(2m);Multiply;Number(3m);Plus]
+let ``1 2 * 3 + = 5``()=
+    [Number 1;Number 2;Multiply;Number 3;Plus]
     |> execute
-    |> should equal 5m
-    
+    |> should equal 5
+
 [<Fact>]
-let ``1 2 * 3 * = 6``()= 
-    [Number(1m);Number(2m);Multiply;Number(3m);Multiply]
+let ``1 2 * 3 * = 6``()=
+    [Number 1;Number 2;Multiply;Number 3;Multiply]
     |> execute
-    |> should equal 6m
-    
+    |> should equal 6
+
 // 1 2 3 4 5
 [<Fact>]
 let ``1 2 + 4 + 5 + = 12``()=
-    [Number(1m);Number(2m);Plus;Number(4m);Plus;Number(5m);Plus]
+    [Number 1;Number 2;Plus;Number 4;Plus;Number 5;Plus]
     |> execute
-    |> should equal 12m
+    |> should equal 12
 
 [<Fact>]
-let ``toString for Number``()= 
-    (Number(1m)).ToString() |> should equal "1"
+let ``toString for Number``()=
+    (Number 1).ToString() |> should equal "1"
 
 [<Fact>]
-let ``toString for Operator``()= 
-    (Plus).ToString() |> should equal "+"
+let ``toString for Operator``()=
+    Plus.ToString() |> should equal "+"
 
 [<Fact>]
 let ``parse string to stack`` ()=
-    "1 2" |> parseStringToStack 
-    |> should equal [1m;2m]
+    "1 2" |> parseStringToStack
+    |> should equal [1;2]
 
 // 1 2 3 4 5
 [<Fact>]
 let ``1 2 + 4 + 5 + = 12   (execute2)``()=
-    [Number(1m);Number(2m);Plus;Number(4m);Plus;Number(5m);Plus]
+    [Number 1;Number 2;Plus;Number 4;Plus;Number 5;Plus]
     |> execute2
-    |> should equal ([12m;7m;3m])
+    |> should equal [12;7;3]
 
 
 [<Fact>]
 let ``Stop on negative``()=
-    [Number(1m);Number(2m);Minus]
+    [Number 1;Number 2;Minus]
     |> execute2
-    |> should equal ( List.empty<decimal>)
+    |> should equal List.empty<int>
 
 [<Fact>]
 let ``Stop on fraction``()=
-    [Number(1m);Number(2m);Divide]
+    [Number 1;Number 2;Divide]
     |> execute2
-    |> should equal ( List.empty<decimal>)
-
-
+    |> should equal List.empty<int>

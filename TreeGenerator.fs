@@ -13,9 +13,10 @@ let private operators =
 
 /// Generate all ways to split a list into two non-empty parts
 let allSplits (items: 'a list) : ('a list * 'a list) seq =
+    let n = List.length items
     seq {
-        for i in 1 .. (List.length items - 1) do
-            yield (List.take i items, List.skip i items)
+        for i in 1 .. n - 1 do
+            yield List.take i items, List.skip i items
     }
 
 /// Generate all non-empty subsets of a list
@@ -32,13 +33,13 @@ let allSubsets (items: 'a list) : 'a list seq =
 
 /// Generate all binary expression trees for a list of numbers
 /// Each tree represents a different bracketing/evaluation order
-let rec allTrees (numbers: decimal list) : Expr seq =
+let rec allTrees (numbers: num list) : Expr seq =
     seq {
         match numbers with
         | [] -> ()
         | [n] -> yield Num n
         | nums ->
-            for (leftNums, rightNums) in allSplits nums do
+            for leftNums, rightNums in allSplits nums do
                 for leftTree in allTrees leftNums do
                     for rightTree in allTrees rightNums do
                         for op in operators do
@@ -46,13 +47,13 @@ let rec allTrees (numbers: decimal list) : Expr seq =
     }
 
 /// Generate all possible expression trees for all subsets and permutations of given numbers
-let allExpressionsFor (numbers: decimal list) : Expr seq =
+let allExpressionsFor (numbers: num list) : Expr seq =
     seq {
         // All subsets of size >= 2 (need at least 2 numbers for an operation)
         for subset in allSubsets numbers do
-            if List.length subset >= 2 then
-                // All permutations of each subset
+            match subset with
+            | [] | [_] -> ()
+            | _ ->
                 for perm in getAllPerms subset do
-                    // All possible expression trees for this permutation
                     yield! allTrees perm
     }

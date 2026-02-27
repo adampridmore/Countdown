@@ -4,23 +4,22 @@ module Permutations
 
 let rec insertions pre c post =
     seq {
-        if List.length post = 0 then
-            yield pre @ [c]
-        else
-            if List.forall (fun x->x<>c) post then
-                yield pre@[c]@post
-            yield! insertions (pre@[post.Head]) c post.Tail
-        }
+        match post with
+        | [] -> yield pre @ [c]
+        | _ ->
+            if List.forall (fun x -> x <> c) post then
+                yield pre @ [c] @ post
+            yield! insertions (pre @ [post.Head]) c post.Tail
+    }
 
 let rec permutations l =
     seq {
-        if List.length l = 1 then
-            yield l
-        else
-            let subperms = permutations l.Tail
-            for sub in subperms do
+        match l with
+        | [_] -> yield l
+        | _ ->
+            for sub in permutations l.Tail do
                 yield! insertions [] l.Head sub
-        }
+    }
 
 let getAllPerms = permutations
 

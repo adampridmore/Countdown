@@ -1,6 +1,6 @@
-﻿module StackCalculator2
+module StackCalculator2
 
-type num = decimal
+type num = int
 
 [<StructuredFormatDisplay("{name}")>]
 type Operator = {
@@ -8,43 +8,36 @@ type Operator = {
     name : string
 }
 
-type Item = 
+type Item =
     | Operator of Operator
     | Number of num
-    override m.ToString() = 
+    override m.ToString() =
         match m with
         | Operator o -> o.name
         | Number n -> n.ToString()
 
-let Plus        = Operator({fn = (+);     name = "+"})
-let Minus       = Operator({fn = (-);     name = "-"})
-let Multiply    = Operator({fn = (*);     name = "*"})
-let Divide      = Operator({fn = (/);     name = "/"})
+let Plus     = Operator {fn = (+);                                               name = "+"}
+let Minus    = Operator {fn = (-);                                               name = "-"}
+let Multiply = Operator {fn = (*);                                               name = "*"}
+let Divide   = Operator {fn = (fun a b -> if b <> 0 && a % b = 0 then a/b else -1); name = "/"}
 
-
-//type Items = Items of List<Item>
-
-let itemToDecimal num =
-    match num with
-    | Number(x) -> x |> decimal
+let itemToNum item =
+    match item with
+    | Number x -> x
     | _ -> failwith "Operator is not a number"
 
-let isValid num =  
-    match num with
-    | x when x < 0m -> false
-    | x when x - System.Math.Floor(x) > 0m -> false
-    | _ -> true
+let isValid (n: num) = n >= 0
 
-let executeTop = 
+let executeTop =
     function
     | Number(a)::Number(b)::Operator(o)::rest -> Number(o.fn a b)::rest
     | [Number(x)] -> [Number(x)]
     | _ -> failwith "Error"
 
-let execute items = 
+let execute items =
     let itemsList = items |> Seq.toList
 
-    let rec executeRest itemsList = 
+    let rec executeRest itemsList =
         match itemsList with
         | [Number(x)] -> [Number(x)]
         | x -> itemsList |> executeTop |> executeRest
@@ -53,39 +46,33 @@ let execute items =
     | [Number(x)] -> x
     | x -> failwith "Error"
 
-let execute2 (items : seq<Item>) = 
+let execute2 (items : seq<Item>) =
     let itemsList = items |> Seq.toList
 
-    let rec executeRest (results,itemsList) = 
+    let rec executeRest (results,itemsList) =
         match itemsList with
         | [Number(x)] -> (results, [])
-        | itemsList -> 
-            let newStack = itemsList |> executeTop 
-            let topNumber = newStack |> Seq.head |> itemToDecimal
+        | itemsList ->
+            let newStack = itemsList |> executeTop
+            let topNumber = newStack |> Seq.head |> itemToNum
             match topNumber |> isValid with
             | true -> executeRest (topNumber::results, newStack)
             | false -> (results, [itemsList |> Seq.head ] )
 
-    let results, _ = executeRest ([], itemsList) 
+    let results, _ = executeRest ([], itemsList)
     results
 
-let parseStringToStack : (string -> list<decimal>) = 
+let parseStringToStack : (string -> list<num>) =
     let split (text:string) =
         text.Split([|" "|],System.StringSplitOptions.RemoveEmptyEntries)
-   
-    let tryPaseInt (text : string) =
-        let mutable i : int32 = 0
-        match (System.Int32.TryParse(text, &i)) with
-        | true -> Some(i)
-        | false -> None
 
     let parse (item:string) =
-        match tryPaseInt(item) with
-        | Some(x) -> x |> decimal
-        | None -> failwith (sprintf "Invalid number: %s" item)
+        match System.Int32.TryParse item with
+        | true, i -> i
+        | false, _ -> failwith (sprintf "Invalid number: %s" item)
 
     split >> Seq.map parse >> Seq.toList
 
 let numbersToItemNumbers (numbers: seq<num>) : seq<Item> =
-    numbers 
+    numbers
     |> Seq.map (fun n->Item.Number(n))

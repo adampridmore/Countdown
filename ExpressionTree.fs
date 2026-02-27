@@ -4,47 +4,47 @@ open StackCalculator2
 
 /// Binary expression tree for arithmetic expressions
 type Expr =
-    | Num of decimal
+    | Num of num
     | BinOp of Expr * Operator * Expr
 
 /// A single calculation step
 type Step = {
-    Left: decimal
+    Left: num
     Op: string
-    Right: decimal
-    Result: decimal
+    Right: num
+    Result: num
 }
 
 /// Evaluate an expression tree, returning None if any intermediate result violates game rules
-let evaluate (expr: Expr) : decimal option =
+let evaluate (expr: Expr) : num option =
     let rec eval = function
         | Num n -> Some n
         | BinOp(left, op, right) ->
             match eval left, eval right with
-            | Some l, Some r when r <> 0m || op.name <> "/" ->
+            | Some l, Some r ->
                 let result = op.fn l r
                 if isValid result then Some result else None
             | _ -> None
     eval expr
 
 /// Evaluate an expression tree and collect all intermediate steps
-let evaluateWithSteps (expr: Expr) : (decimal option * Step list) =
+let evaluateWithSteps (expr: Expr) : num option * Step list =
     let steps = ResizeArray<Step>()
 
     let rec eval = function
         | Num n -> Some n
         | BinOp(left, op, right) ->
             match eval left, eval right with
-            | Some l, Some r when r <> 0m || op.name <> "/" ->
+            | Some l, Some r ->
                 let result = op.fn l r
                 if isValid result then
-                    steps.Add({ Left = l; Op = op.name; Right = r; Result = result })
+                    steps.Add { Left = l; Op = op.name; Right = r; Result = result }
                     Some result
                 else None
             | _ -> None
 
     let result = eval expr
-    (result, steps |> Seq.toList)
+    result, steps |> Seq.toList
 
 /// Get operator precedence for bracket placement
 let private precedence (op: Operator) =
@@ -61,7 +61,7 @@ let private isRightAssociativeIssue (parentOp: Operator) =
 let toInfix (expr: Expr) : string =
     let rec toInfixImpl (expr: Expr) (parentOp: Operator option) (isRight: bool) : string =
         match expr with
-        | Num n -> sprintf "%.0f" n
+        | Num n -> sprintf "%d" n
         | BinOp(left, op, right) ->
             let inner = sprintf "%s %s %s"
                             (toInfixImpl left (Some op) false)
@@ -74,7 +74,7 @@ let toInfix (expr: Expr) : string =
                     // Always add parens when precedence differs (clarifying)
                     precedence op <> precedence pOp ||
                     // Still handle right-associativity issues for same precedence
-                    (isRight && precedence op = precedence pOp && isRightAssociativeIssue pOp)
+                    isRight && precedence op = precedence pOp && isRightAssociativeIssue pOp
                 if needsParens then sprintf "(%s)" inner else inner
 
     toInfixImpl expr None false
@@ -83,7 +83,7 @@ let toInfix (expr: Expr) : string =
 let toStepByStep (steps: Step list) : string =
     steps
     |> List.mapi (fun i step ->
-        sprintf "  %d. %.0f %s %.0f = %.0f" (i + 1) step.Left step.Op step.Right step.Result)
+        sprintf "  %d. %d %s %d = %d" (i + 1) step.Left step.Op step.Right step.Result)
     |> String.concat "\n"
 
 /// Check if an operator is commutative
@@ -92,7 +92,7 @@ let private isCommutative (op: Operator) =
 
 /// Get a numeric "weight" for an expression (used for canonical ordering)
 /// Larger/simpler expressions should come first
-let rec private exprWeight (expr: Expr) : decimal =
+let rec private exprWeight (expr: Expr) : num =
     match expr with
     | Num n -> n
     | BinOp(left, _, right) -> max (exprWeight left) (exprWeight right)

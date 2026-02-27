@@ -5,12 +5,12 @@ open ExpressionTree
 open NumbersSolver
 
 let doNumbers (numbers:string) (target: string) =
-  let targetNumber = target |> System.Decimal.Parse
+  let targetNumber = target |> System.Int32.Parse
   let numberList = numbers |> parseStringToStack
 
   solveBest numberList targetNumber 5
   |> List.iter (fun solution ->
-      printfn "%s = %.0f" (toInfix solution.Expression) solution.Result)
+      printfn "%s = %d" (toInfix solution.Expression) solution.Result)
 
 let doLetters letters =
   WordSolver.solve(letters)

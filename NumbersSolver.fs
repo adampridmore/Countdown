@@ -6,7 +6,7 @@ open TreeGenerator
 /// A solution to a numbers puzzle
 type Solution = {
     Expression: Expr
-    Result: decimal
+    Result: int
     Steps: Step list
 }
 
@@ -16,31 +16,28 @@ let scoreSolution (solution: Solution) : int =
     let steps = solution.Steps
     let stepCount = steps.Length
 
-    // Count operations by type
-    let divCount = steps |> List.filter (fun s -> s.Op = "/") |> List.length
-    let subCount = steps |> List.filter (fun s -> s.Op = "-") |> List.length
-
-    // Check for "nice" intermediate results (multiples of 10, 25, etc.)
-    let niceResults =
-        steps
-        |> List.filter (fun s ->
-            s.Result % 100m = 0m ||
-            s.Result % 25m = 0m ||
-            s.Result % 10m = 0m)
-        |> List.length
+    // Count operations and nice results in a single pass
+    let mutable divCount = 0
+    let mutable subCount = 0
+    let mutable niceResults = 0
+    for s in steps do
+        if s.Op = "/" then divCount <- divCount + 1
+        if s.Op = "-" then subCount <- subCount + 1
+        if s.Result % 100 = 0 || s.Result % 25 = 0 || s.Result % 10 = 0 then
+            niceResults <- niceResults + 1
 
     // Scoring: lower is better
     // - Each step costs 100 points (most important factor)
     // - Division costs 30 points per use (harder to do mentally)
     // - Subtraction costs 10 points per use (slightly harder than addition)
     // - Nice intermediate results give -15 bonus each
-    (stepCount * 100) + (divCount * 30) + (subCount * 10) - (niceResults * 15)
+    stepCount * 100 + divCount * 30 + subCount * 10 - niceResults * 15
 
 /// Find all solutions that reach the target number
-let solve (numbers: decimal list) (target: decimal) : Solution seq =
+let solve (numbers: int list) (target: int) : Solution seq =
     seq {
         for expr in allExpressionsFor numbers do
-            let (result, steps) = evaluateWithSteps expr
+            let result, steps = evaluateWithSteps expr
             match result with
             | Some r when r = target ->
                 yield { Expression = expr; Result = r; Steps = steps }
@@ -48,17 +45,17 @@ let solve (numbers: decimal list) (target: decimal) : Solution seq =
     }
 
 /// Find all solutions, deduplicated by normalized infix representation
-let solveUnique (numbers: decimal list) (target: decimal) : Solution seq =
+let solveUnique (numbers: int list) (target: int) : Solution seq =
     solve numbers target
     |> Seq.map (fun sol -> { sol with Expression = normalize sol.Expression })
     |> Seq.distinctBy (fun sol -> toInfix sol.Expression)
 
 /// Find the first solution (for performance when only one is needed)
-let solveFirst (numbers: decimal list) (target: decimal) : Solution option =
+let solveFirst (numbers: int list) (target: int) : Solution option =
     solve numbers target |> Seq.tryHead
 
 /// Find the best solutions, ranked by score (lower is better), returning top N
-let solveBest (numbers: decimal list) (target: decimal) (count: int) : Solution list =
+let solveBest (numbers: int list) (target: int) (count: int) : Solution list =
     solveUnique numbers target
     |> Seq.toList
     |> List.sortBy scoreSolution
