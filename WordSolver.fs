@@ -22,7 +22,6 @@ let solve (letters: string) : seq<string * int> =
   let words = System.IO.File.ReadAllLines(wordsFileName)
 
   words
-  |> Seq.filter (fun word -> isMatch (letters.ToLower()) word)
+  |> Seq.filter (fun word -> word.Length > 3 && isMatch (letters.ToLower()) word)
   |> Seq.map( fun word -> (word, word.Length))
-  |> Seq.sortBy(snd)
-  
+  |> Seq.sortByDescending(snd)
