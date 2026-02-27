@@ -1,0 +1,19 @@
+# Development folders
+bin/
+obj/
+
+# Git
+.git/
+.gitignore
+
+# macOS
+.DS_Store
+
+# Editor files
+.vscode/
+.vs/
+*.user
+*.suo
+
+# Local envs
+.env

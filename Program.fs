@@ -74,5 +74,7 @@ let main args =
         System.Threading.Tasks.Task.CompletedTask
     ) |> ignore
 
-    app.Run()
+    let port = System.Environment.GetEnvironmentVariable("PORT")
+    let url = if System.String.IsNullOrWhiteSpace(port) then "http://0.0.0.0:8080" else $"http://0.0.0.0:{port}"
+    app.Run(url)
     0
