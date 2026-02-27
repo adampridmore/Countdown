@@ -6,12 +6,12 @@ open Xunit
 open WordSolver
 
 let LettersAssert letters word expectedResult : Unit =
-  let actualResult : bool = isMatch letters word
+  let actualResult : bool = isMatchStr letters word
 
   if (actualResult = expectedResult) then
     ()
   else
-    let error = $"Expected match: %b{expectedResult} %s{word} to match %s{letters}"
+    let error = $"Expected match: {expectedResult} {word} to match {letters}"
     raise (Exception(error))
 
 [<Fact>]
